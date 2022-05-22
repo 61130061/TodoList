@@ -1,6 +1,6 @@
 # TodoList
 
-Just a simple Todo List webapp inspired by ![Oliver Cederborg](https://dribbble.com/oliver). 
+Just a simple Todo List webapp inspired by [Oliver Cederborg](https://dribbble.com/oliver). 
 Go check his work!
 
 
