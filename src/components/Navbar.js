@@ -16,7 +16,7 @@ function Navbar () {
          <div>
             <div className="nav-logo">Logo</div>
             <div className="nav-menu">
-               <div onClick={() => navigate('/dashboard', { replace: true })} active={checkLocation('dashboard')}>Dashboard</div>
+               <div onClick={() => navigate('/', { replace: true })} active={checkLocation('')}>Dashboard</div>
                <div onClick={() => navigate('/collection', { replace: true })} active={checkLocation('collection')}>Collections</div>
             </div>
          </div>

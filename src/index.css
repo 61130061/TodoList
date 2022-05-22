@@ -4,7 +4,6 @@
  * Color
  * Dark: #131319
  * Light-Dark: #20212C
- * Active: #414052 
  * Grey: #90919A
  */
 
@@ -22,10 +21,17 @@ input {
    font-size: 30px;
 }
 
+ul {
+   list-style-type: none;
+   margin: 0;
+   padding: 0;
+}
+
 .top-fixed {
    position: fixed;
    top: 0;
    width: 100%;
+   z-index: 1;
 }
 
 .Navbar {
@@ -97,10 +103,36 @@ input {
 .dot-btn {
    border-radius: 10px;
    padding-inline: 5px;
+   position: relative;
 }
 
 .dot-btn:hover {
    cursor: pointer;
+}
+
+.dot-btn > ul {
+   position: absolute;
+   background: rgb(32,33,44,0.8);
+   backdrop-filter: blur(8px);
+   border-radius: 10px;
+   right: 0px;
+   width: 150px;
+}
+
+.dot-btn > ul > li {
+   padding: 15px 20px;
+   display: flex;
+}
+
+.dot-btn > ul > li:first-child {
+   border-radius: 10px 10px 0 0;
+}
+.dot-btn > ul > li:last-child {
+   border-radius: 0 0 10px 10px;
+}
+
+.dot-btn > ul > li:hover {
+   background: rgb(255,255,255,0.05);
 }
 
 .clt-tab {
@@ -144,16 +176,12 @@ input {
 
 
 .clt-card > .icon {
-   width: 40px;
-   height: 40px;
    border-radius: 15px;
-   margin-bottom: 40px;
+   margin-bottom: 30px;
    font-size: 40px;
-}
-
-
-.clt-card > .icon > * {
-   margin: auto;
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
 }
 
 .clt-card > .title {
@@ -183,6 +211,9 @@ input {
    align-items: center;
 }
 
+
+/* CollectionOf Page */
+
 .clt-navbar {
    display: flex;
    align-items: center;
@@ -203,6 +234,7 @@ input {
    align-items: center;
    gap: 10px;
 }
+
 
 .clt-navbar > div:nth-child(1) > div > .icon {
    font-size: 50px;
@@ -452,3 +484,87 @@ input {
    color: #D17375;
    background: rgb(209, 115, 117, 0.1);
 }
+
+
+/* Dashboard Page */
+
+.db-group {
+   font-size: 14px;
+   margin-bottom: 20px;
+}
+
+.db-group > .header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 10px 15px;
+   background: #272832;
+   border-radius: 15px 15px 0 0;
+}
+
+.db-group > .header:hover {
+   cursor: pointer;
+}
+
+.db-group > .header > div:nth-child(1) {
+   display: flex;
+   align-items: center;
+   gap: 20px;
+}
+
+.db-group > .header > .icon {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 30px;
+   height: 30px;
+   border-radius: 10px;
+   transform: rotate(180deg);
+}
+
+.db-group > .header > div:nth-child(1) > div:nth-child(1) {
+   font-size: 30px;
+}
+
+.db-group > .header > div:nth-child(1) > div:nth-child(2) {
+   font-size: 18px;
+}
+
+.db-group > .header > div:nth-child(1) > div:nth-child(2)[untitled=true]::after {
+   content: 'Untitled';
+}
+
+.db-group > .body {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+   padding-top: 10px;
+   background: #20212B;
+   border-radius: 0 0 15px 15px;
+}
+
+.db-group > .body > .task-container {
+   background: transparent;
+   padding: 10px 15px;
+}
+
+.db-group > .body > .footer {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 15px;
+   background: #20212B;
+   border-top: 1px solid rgb(255,255,255,0.1);
+   border-radius: 0 0 15px 15px;
+   color: white;
+}
+
+.db-group > .body > .footer:hover {
+   cursor: pointer;
+}
+
+.db-group > .body > .footer > .arrow-icon {
+   margin-left: 10px;
+   transform: rotate(90deg);
+}
+
