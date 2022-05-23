@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import emojiList from './data/emoji-list-data';
 import emojiGroup from './data/emoji-group-data';
 
-function randomEmoji () {
+export function randomEmoji () {
    return emojiList[~~(Math.random() * emojiList.length)]
 }
 
@@ -12,7 +12,7 @@ function getAvgHex (color, total) {
    return Math.round(color / total).toString(16).padStart(2, 0);
 }
 
-function getEmojiColor (emoji) {
+export function getEmojiColor (emoji) {
    let totalPixels = 0;
    const colors = {
       red: 0,
@@ -43,7 +43,6 @@ function getEmojiColor (emoji) {
 }
 
 export function newCollection (emoji = randomEmoji()) {
-
    return {
       id: uuid(),
       name: '',
@@ -73,6 +72,44 @@ export function deleteCollection (lists, setLists, index) {
    const newArr = [...lists];
    if (index > -1) {
       newArr.splice(index, 1);
+   }
+   setLists(newArr);
+}
+
+export function updateCollection (lists, setLists, index, key, value) {
+   const newArr = [...lists];
+   if (index > -1) {
+      newArr[index][key] = value;
+   }
+   setLists(newArr);
+}
+
+export function createTask (lists, setLists, listIndex) {
+   const newArr = [...lists];
+   newArr[listIndex].tasks.push({
+      id: uuid(),
+      name: '',
+      done: false,
+      date: '',
+      note: '',
+      files: [],
+      sub: [],
+   });
+   setLists(newArr);
+}
+
+export function updateTask (lists, setLists, listIndex, taskIndex, key, value) {
+   const newArr = [...lists];
+   if (taskIndex > -1) {
+      newArr[listIndex].tasks[taskIndex][key] = value;
+   }
+   setLists(newArr);
+}
+
+export function deleteTask (lists, setLists, listIndex, index) {
+   const newArr = [...lists];
+   if (index > -1) {
+      newArr[listIndex].tasks.splice(index, 1);
    }
    setLists(newArr);
 }

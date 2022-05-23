@@ -1,16 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
 import Collection from './pages/Collection';
 import CollectionOf from './pages/CollectionOf';
 import Dashboard from './pages/Dashboard';
-
-function Test() {
-   return (
-      <div>hello world</div>
-   )
-}
 
 function App() {
    const [lists, setLists] = useState([
@@ -19,7 +13,44 @@ function App() {
          name: 'School',
          icon: '🦁',
          color: "#c88323",
-         tasks: [],
+         tasks: [
+            {
+               id: '70951762-dab7-11ec-9d64-0242ac120002',
+               name: 'Finish the essay collaboration 1',
+               done: false,
+               date: '',
+               note: '',
+               files: [],
+               sub: [
+                  {
+                     name: 'Homework class 102',
+                     done: false,
+                  },
+                  {
+                     name: 'Homework class 201',
+                     done: true,
+                  },
+               ],
+            },
+            {
+               id: '76c811de-dab7-11ec-9d64-0242ac120002',
+               name: 'Finish the essay collaboration 2',
+               done: true,
+               date: '',
+               note: '',
+               files: [],
+               sub: [],
+            },
+            {
+               id: '7c8ce8f6-dab7-11ec-9d64-0242ac120002',
+               name: 'Finish the essay collaboration 3',
+               done: false,
+               date: '',
+               note: '',
+               files: [],
+               sub: [],
+            },
+         ],
       },
       {
          id: '38934e74-a7f5-4c26-9fa6-bf2dfadcb840',
@@ -36,6 +67,7 @@ function App() {
          tasks: [],
       },
    ]);
+
 
    return (
       <div className="App">

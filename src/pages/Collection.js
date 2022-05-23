@@ -3,16 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '../components/Icon';
 import { newCollection } from '../Core';
 
-function countDoneTask (data) {
-   let count = 0;
-   for (let i=0; i<data.length; i++) {
-      if (data[i].done) {
-         count++;
-      }
-   }
-   return count;
-}
-
 function Collection ({ lists, setLists }) {
    const navigate = useNavigate();
 
@@ -48,9 +38,9 @@ function Collection ({ lists, setLists }) {
                <div untitled={data.name == '' ? 'true':'false'} className="title">{data.name}</div>
                <div className="footer">
                   <div>
-                     {countDoneTask(data) == data.tasks.length ?
+                     {data.tasks.filter(el => el.done == true).length == data.tasks.length ?
                            data.tasks.length > 0 ? 'All done' : 'No task'
-                           :countDoneTask(data)+'/'+data.tasks.length + ' done'
+                           :data.tasks.filter(el => el.done == true).length+'/'+data.tasks.length + ' done'
                      }
                   </div>
                   <svg id="svg" width="30px" heigth="30px" viewBox="0 0 100 100">
@@ -59,11 +49,13 @@ function Collection ({ lists, setLists }) {
                         d="M50 10
                         a 40 40 0 0 1 0 80
                         a 40 40 0 0 1 0 -80"/>
+                     {data.tasks.length > 0 &&
                      <path fill="none" strokeLinecap="round" strokeWidth="15" stroke={data.color}
-                        strokeDasharray="125.1,250.2"
+                        strokeDasharray={String((data.tasks.filter(el => el.done == true).length / data.tasks.length)*250.2)+',250.2'}
                         d="M50 10
                         a 40 40 0 0 1 0 80
                         a 40 40 0 0 1 0 -80"/>
+                     }
                   </svg>
                </div>
             </div>

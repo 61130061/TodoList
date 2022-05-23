@@ -3,8 +3,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Icon from '../components/Icon';
 import TaskModal from '../components/TaskModal';
+import ColorModal from '../components/ColorModal';
+import EmojiPicker from '../components/EmojiPicker';
 
-import { useClickOutside, deleteCollection } from '../Core';
+import { 
+   useClickOutside, 
+   deleteCollection, 
+   updateCollection, 
+   getEmojiColor,
+   createTask,
+} from '../Core';
 
 function getIndexById (data, id) {
    for (let x=0; x<data.length; x++) {
@@ -15,10 +23,14 @@ function getIndexById (data, id) {
 }
 
 function CollectionOf ({ lists, setLists }) {
+   const [taskIndex, setTaskIndex] = useState(null);
    const [taskModal, setTaskModal] = useState(false);
+   const [colorModal, setColorModal] = useState(false);
    const [dotMenu, setDotMenu] = useState(false);
+   const [emojiSel, setEmojiSel] = useState(false);
    const titleRef = useRef(null);
    const dotMenuRef = useRef(null);
+   const epRef = useRef(null);
 
    let { id } = useParams();
    const navigate = useNavigate();
@@ -32,6 +44,7 @@ function CollectionOf ({ lists, setLists }) {
       if (lists[listIndex].name == '') {
          titleRef.current.focus();
       }
+      titleRef.current.innerText = lists[listIndex].name;
    }, []);
 
    const handleDelete = () => {
@@ -39,46 +52,94 @@ function CollectionOf ({ lists, setLists }) {
       navigate('/collection');
    }
 
+   const handleUpdateIcon = (emoji) => {
+      updateCollection(lists, setLists, listIndex, 'icon', emoji)
+      updateCollection(lists, setLists, listIndex, 'color', getEmojiColor(emoji))
+      setEmojiSel(false);
+   }
+
+   const handleKeyDown = (e) => {
+      if (e.keyCode == 13) {
+         e.preventDefault();
+         e.target.blur();
+      }
+   }
+
+   const handleOpenTask = (id) => {
+      const index = getIndexById(lists[listIndex].tasks, id);
+      setTaskIndex(index);
+      setTaskModal(true);
+   }
+
+   const handleCreateTask = () => {
+      createTask(lists, setLists, listIndex);
+      setTaskIndex(lists[listIndex].tasks.length-1);
+      setTaskModal(true);
+   }
+
    return (
       <div className="container">
 
          {taskModal &&
-         <TaskModal onClose={setTaskModal} />
+            <TaskModal onClose={() => setTaskModal(false)} taskIndex={taskIndex} lists={lists} listIndex={listIndex} setLists={setLists} />
+         }
+
+         {colorModal &&
+            <ColorModal 
+               onClose={() => setColorModal(false)} 
+               lists={lists}
+               setLists={setLists}
+               listIndex={listIndex}
+            />
          }
 
          <div className="clt-navbar">
             <div>
                <div onClick={() => navigate(-1)} className="back-btn"><Icon name="down" w="20" h="20" color="#fff" stroke="4" /></div>
                <div>
-                  <div className="icon">{lists[listIndex].icon}</div>
-                  <div ref={titleRef} untitled={lists[listIndex].name == '' ? "true" : "false"} contentEditable suppressContentEditableWarning>{lists[listIndex].name}</div>
+                  <div className="icon">
+                     <div onClick={() => setEmojiSel(true)}>{lists[listIndex].icon}</div>
+                     {emojiSel &&
+                        <EmojiPicker onClose={() => setEmojiSel(false)} onSelect={handleUpdateIcon} />
+                     }
+                  </div>
+                  <div 
+                     onInput={(e) => updateCollection(lists, setLists, listIndex, 'name', e.target.innerText)} 
+                     onKeyDown={handleKeyDown}
+                     ref={titleRef} 
+                     untitled={lists[listIndex].name == '' ? "true" : "false"} 
+                     contentEditable suppressContentEditableWarning
+                  >
+                  </div>
                </div>
             </div>
             <div onClick={() => setDotMenu(true)} className="dot-btn">
                <Icon name="dots" w="30" h="30" color="#fff" stroke="1" />
                {dotMenu &&
                <ul ref={dotMenuRef}>
-                  <li>Change Color</li>
+                  <li onClick={() => setColorModal(true)} >Change Color</li>
                   <li onClick={handleDelete} style={{color: 'red'}}>Delete</li>
                </ul>
                }
             </div>
          </div>
 
-         <div onClick={() => setTaskModal(true)} className="new-task-btn">
+         <div onClick={handleCreateTask} className="new-task-btn">
             <div style={{backgroundColor: lists[listIndex].color}}><Icon name="plus" w="10" h="10" color="#fff" stroke="1" /></div>
             <div>Add new task</div>
          </div>
 
          <div className="tasks-list">
-            <div className="title">Tasks - 6</div>
-            {Array.from(Array(6).keys()).map((index) => 
-            <div key={index} className="task-container">
+            <div className="title">Tasks - {lists[listIndex].tasks.filter(el => el.done == false).length}</div>
+            {lists[listIndex].tasks.filter(el => el.done == false).map((data, index) => 
+            <div onClick={() => handleOpenTask(data.id)} key={index} className="task-container">
                <div className="checkbox"><Icon name="circle" w="25" h="25" color={lists[listIndex].color} stroke="2" /></div>
                <div className="detail">
-                  <div>Finish the essay collaboration</div>
+                  <div className="title" untitled={data.name == '' ? 'true':'false'}>{data.name}</div>
                   <div className="sub-detail">
+                     {data.sub.length > 0 &&
                      <div>0/1</div>
+                     }
                      <div>Today</div>
                   </div>
                </div>
@@ -88,17 +149,15 @@ function CollectionOf ({ lists, setLists }) {
 
          <div className="completed-list">
             <div className="title">
-               <div>Complete - 5</div>
+               <div>Complete - {lists[listIndex].tasks.filter(el => el.done == true).length}</div>
                <div>Clear</div>
             </div>
-            {Array.from(Array(6).keys()).map((index) => 
-            <div key={index} className="task-container">
+            {lists[listIndex].tasks.filter(el => el.done == true).map((data, index) => 
+            <div onClick={() => handleOpenTask(data.id)} key={index} className="task-container">
                <div className="checkbox"  style={{backgroundColor: lists[listIndex].color}}><Icon name="check" w="10" h="10" color="#fff" stroke="2" /></div>
                <div className="detail">
-                  <div>Finish the essay collaboration</div>
+                  <div>{data.name}</div>
                   <div className="sub-detail">
-                     <div>0/1</div>
-                     <div>Today</div>
                   </div>
                </div>
             </div>
