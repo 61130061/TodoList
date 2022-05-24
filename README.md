@@ -49,12 +49,6 @@ const [lists, setLists] = useState([
 - [ ] Add animation
 - [ ] More responsive CSS
 - [ ] Light/Dark mode
-- [x] Icon picker / update icon
-- [x] Change collection's color
-- [x] Update collection's name
-- [x] Create new task
-- [x] Task modal UI
-- [x] Delete task
 
 
 ## Issue

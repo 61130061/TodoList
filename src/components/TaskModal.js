@@ -67,8 +67,11 @@ function TaskModal ({ onClose, taskIndex, lists, listIndex, setLists }) {
                   </div>
                </div>
 
-               <div className="note-section">
-                  Write a note...
+               <div 
+                  empty={lists[listIndex].tasks[taskIndex].note == '' ? "true" : "false"} 
+                  className="note-section"
+                  contentEditable suppressContentEditableWarning
+               >
                </div>
 
                <div className="st-section">
