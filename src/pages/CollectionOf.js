@@ -12,6 +12,7 @@ import {
    updateCollection, 
    getEmojiColor,
    createTask,
+   updateTask,
 } from '../Core';
 
 function getIndexById (data, id) {
@@ -65,7 +66,7 @@ function CollectionOf ({ lists, setLists }) {
       }
    }
 
-   const handleOpenTask = (id) => {
+   const handleOpenTask = (id, e) => {
       const index = getIndexById(lists[listIndex].tasks, id);
       setTaskIndex(index);
       setTaskModal(true);
@@ -130,11 +131,16 @@ function CollectionOf ({ lists, setLists }) {
          </div>
 
          <div className="tasks-list">
-            <div className="title">Tasks - {lists[listIndex].tasks.filter(el => el.done == false).length}</div>
+            <div className="title">Todo List - {lists[listIndex].tasks.filter(el => el.done == false).length}</div>
             {lists[listIndex].tasks.filter(el => el.done == false).map((data, index) => 
-            <div onClick={() => handleOpenTask(data.id)} key={index} className="task-container">
-               <div className="checkbox"><Icon name="circle" w="25" h="25" color={lists[listIndex].color} stroke="2" /></div>
-               <div className="detail">
+            <div key={index} className="task-container">
+               <div 
+                  onClick={() => updateTask(lists, setLists, listIndex, getIndexById(lists[listIndex].tasks, data.id), 'done', true)} 
+                  className="checkbox"
+               >
+                  <Icon name="circle" w="25" h="25" color={lists[listIndex].color} stroke="2" />
+               </div>
+               <div onClick={(e) => handleOpenTask(data.id, e)} className="detail">
                   <div className="title" untitled={data.name == '' ? 'true':'false'}>{data.name}</div>
                   <div className="sub-detail">
                      {data.sub.length > 0 &&
@@ -149,14 +155,20 @@ function CollectionOf ({ lists, setLists }) {
 
          <div className="completed-list">
             <div className="title">
-               <div>Complete - {lists[listIndex].tasks.filter(el => el.done == true).length}</div>
+               <div>Completed - {lists[listIndex].tasks.filter(el => el.done == true).length}</div>
                <div>Clear</div>
             </div>
             {lists[listIndex].tasks.filter(el => el.done == true).map((data, index) => 
-            <div onClick={() => handleOpenTask(data.id)} key={index} className="task-container">
-               <div className="checkbox"  style={{backgroundColor: lists[listIndex].color}}><Icon name="check" w="10" h="10" color="#fff" stroke="2" /></div>
-               <div className="detail">
-                  <div>{data.name}</div>
+            <div key={index} className="task-container completed-container">
+               <div 
+                  onClick={() => updateTask(lists, setLists, listIndex, getIndexById(lists[listIndex].tasks, data.id), 'done', false)} 
+                  className="checkbox"  
+                  style={{backgroundColor: lists[listIndex].color}}
+               >
+                  <Icon name="check" w="25" h="10" color="#fff" stroke="2" />
+               </div>
+               <div onClick={() => handleOpenTask(data.id)} className="detail">
+                  <div untitled={data.name == '' ? 'true':'false'}>{data.name}</div>
                   <div className="sub-detail">
                   </div>
                </div>

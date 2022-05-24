@@ -1,16 +1,38 @@
 import { useEffect, useRef } from 'react';
-import { updateTask, deleteTask } from '../Core';
+import { updateTask, deleteTask, updateSubTask, createSubTask, deleteSubTask } from '../Core';
 
 import Icon from './Icon';
 
+function SubTask ({ lists, listIndex, taskIndex, index, onInput, onKeyDown, className }) {
+   const titleRef = useRef(null);
+
+   useEffect(() => {
+      titleRef.current.innerText = lists[listIndex].tasks[taskIndex].sub[index].name;
+   }, []);
+
+   return (
+      <div 
+         untitled={lists[listIndex].tasks[taskIndex].sub[index].name == '' ? "true" : "false"} 
+         className={className}
+         onInput={(e) => onInput(e)}
+         onKeyDown={onKeyDown}
+         ref={titleRef}
+         contentEditable suppressContentEditableWarning
+      >
+      </div>
+   )
+}
+
 function TaskModal ({ onClose, taskIndex, lists, listIndex, setLists }) {
    const titleRef = useRef(null);
+   const noteRef = useRef(null);
 
    useEffect(() => {
       if (lists[listIndex].tasks[taskIndex].name == '') {
          titleRef.current.focus();
       }
       titleRef.current.innerText = lists[listIndex].tasks[taskIndex].name;
+      noteRef.current.innerText = lists[listIndex].tasks[taskIndex].note;
    }, []);
 
    const handleKeyDown = (e) => {
@@ -36,8 +58,19 @@ function TaskModal ({ onClose, taskIndex, lists, listIndex, setLists }) {
 
                <div className="title">
                   {lists[listIndex].tasks[taskIndex].done ?
-                     <div className="checkbox"  style={{backgroundColor: lists[listIndex].color}}><Icon name="check" w="10" h="10" color="#fff" stroke="2" /></div>:
-                     <div className="checkbox"><Icon name="circle" w="25" h="25" color={lists[listIndex].color} stroke="2" /></div>
+                     <div 
+                        onClick={() => updateTask(lists, setLists, listIndex, taskIndex, 'done', false)}
+                        className="checkbox"  
+                        style={{backgroundColor: lists[listIndex].color}}
+                     >
+                        <Icon name="check" w="25" h="10" color="#fff" stroke="2" />
+                     </div>:
+                     <div 
+                        onClick={() => updateTask(lists, setLists, listIndex, taskIndex, 'done', true)}
+                        className="checkbox"
+                     >
+                        <Icon name="circle" w="25" h="25" color={lists[listIndex].color} stroke="2" />
+                     </div>
                   }
                   <div
                      onKeyDown={handleKeyDown}
@@ -68,7 +101,9 @@ function TaskModal ({ onClose, taskIndex, lists, listIndex, setLists }) {
                </div>
 
                <div 
+                  onInput={(e) => updateTask(lists, setLists, listIndex, taskIndex, 'note', e.target.innerText)} 
                   empty={lists[listIndex].tasks[taskIndex].note == '' ? "true" : "false"} 
+                  ref={noteRef}
                   className="note-section"
                   contentEditable suppressContentEditableWarning
                >
@@ -76,16 +111,47 @@ function TaskModal ({ onClose, taskIndex, lists, listIndex, setLists }) {
 
                <div className="st-section">
                   {lists[listIndex].tasks[taskIndex].sub.map((data, index) =>
-                  <div className="st-container">
-                     {data.done ?
-                        <div className="checkbox"  style={{backgroundColor: lists[listIndex].color}}><Icon name="check" w="10" h="10" color="#fff" stroke="2" /></div>:
-                        <div className="checkbox"><Icon name="circle" w="25" h="25" color={lists[listIndex].color} stroke="2" /></div>
-                     }
-                     <div className={data.done ? "line-through":""}>Buy a tickets</div>
+                  <div 
+                     onMouseEnter={() => document.getElementById('st-menu-'+index).style.display = 'flex'}
+                     onMouseLeave={() => document.getElementById('st-menu-'+index).style.display = 'none'}
+                     key={index}
+                     className="st-container"
+                  >
+                     <div>
+                        {data.done ?
+                           <div 
+                              onClick={() => updateSubTask(lists, setLists, listIndex, taskIndex, index, 'done', false)}
+                              className="checkbox" 
+                              style={{backgroundColor: lists[listIndex].color}}
+                           >
+                              <Icon name="check" w="10" h="10" color="#fff" stroke="2" />
+                           </div>:
+                           <div 
+                              onClick={() => updateSubTask(lists, setLists, listIndex, taskIndex, index, 'done', true)}
+                              className="checkbox"
+                           >
+                              <Icon name="circle" w="25" h="25" color={lists[listIndex].color} stroke="2" />
+                           </div>
+                        }
+                        <SubTask 
+                           className={data.done ? "line-through":""}
+                           onInput={(e) => updateSubTask(lists, setLists, listIndex, taskIndex, index, 'name', e.target.innerText)}
+                           onKeyDown={handleKeyDown}
+                           lists={lists} listIndex={listIndex} taskIndex={taskIndex} index={index} 
+                        />
+                     </div>
+                     <div 
+                        onClick={() => deleteSubTask(lists, setLists, listIndex, taskIndex, index)}
+                        id={'st-menu-'+index}
+                     >
+                        <div><Icon name="trash" w="20" h="20" color="rgb(255,0,0,0.2)" stroke="0.2" /></div>
+                     </div>
                   </div>
                   )}
-                  <div className="st-add">
-                     <div className="checkbox"><Icon name="plus" w="10" h="10" color="#90919A" stroke="2" /></div>
+                  <div onClick={() => createSubTask(lists, setLists, listIndex, taskIndex)} className="st-add">
+                     <div className="checkbox">
+                        <Icon name="plus" w="10" h="10" color="#90919A" stroke="2" />
+                     </div>
                      <div>Add a subtask</div>
                   </div>
                </div>

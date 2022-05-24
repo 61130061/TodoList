@@ -113,3 +113,42 @@ export function deleteTask (lists, setLists, listIndex, index) {
    }
    setLists(newArr);
 }
+
+export function createSubTask (lists, setLists, listIndex, taskIndex) {
+   const newArr = [...lists];
+   newArr[listIndex].tasks[taskIndex].sub.push({
+      name: "",
+      done: false,
+   });
+   setLists(newArr);
+}
+
+export function updateSubTask (lists, setLists, listIndex, taskIndex, subIndex, key, value) {
+   const newArr = [...lists];
+   if (subIndex > -1) {
+      newArr[listIndex].tasks[taskIndex].sub[subIndex][key] = value;
+   }
+   setLists(newArr);
+}
+
+export function deleteSubTask (lists, setLists, listIndex, taskIndex, index) {
+   const newArr = [...lists];
+   if (index > -1) {
+      newArr[listIndex].tasks[taskIndex].sub.splice(index, 1);
+   }
+   setLists(newArr);
+}
+
+export function hex2rgb (hex) {
+   var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+   hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+      return r + r + g + g + b + b;
+   });
+
+   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+   return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+   } : null;
+}

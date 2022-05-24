@@ -27,6 +27,10 @@ ul {
    padding: 0;
 }
 
+div[untitled=true]::after {
+   content: 'Untiled';
+}
+
 .line-through {
    text-decoration: line-through;
 }
@@ -212,6 +216,15 @@ ul {
    color: #90919A;
 }
 
+.clt-card > .footer > .check-ring {
+   border-radius: 100%;
+   width: 25px;
+   height: 25px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
 .clt-add-card {
    height: 100px;
    border: 2px solid #414052;
@@ -302,10 +315,6 @@ ul {
    text-decoration: line-through;
 }
 
-.completed-list > .task-container > .checkbox {
-   background: #FB76A3;
-}
-
 .checkbox {
    display: flex;
    justify-content: center;
@@ -313,24 +322,38 @@ ul {
    border-radius: 10px;
    width: 25px;
    height: 25px;
-   margin: 2px 0;
+   margin-bottom: 2px;
+}
+
+.checkbox:hover {
+   cursor: pointer;
 }
 
 .task-container {
    display: flex;
    align-items: center;
    gap: 20px;
-   padding: 10px 15px;
    background: #20212C;
    border-radius: 20px;
    font-weight: 300;
+   padding: 0px 20px;
+}
+
+.completed-container > :first-child {
+   margin: 10px 0;
+   margin-bottom: 12px;
+}
+
+.task-container > :last-child {
+   width: 100%;
+   padding: 10px 0;
 }
 
 .task-container:hover {
    cursor: pointer;
 }
 
-.task-container > .detail > div:nth-child(2) {
+.task-container > .detail > :last-child {
    margin-top: 2px;
    display: flex;
    gap: 10px;
@@ -390,7 +413,13 @@ ul {
    padding: 30px 3vw;
    border-radius: 10px;
    background: #17181F;
+   overflow-y: scroll;
 }
+
+.modal-container::-webkit-scrollbar {
+   display: none;
+}
+
 
 .modal-container > .main  > .navbar {
    display: flex;
@@ -465,8 +494,22 @@ ul {
    background: rgb(252, 252, 121, 0.05);
    border-radius: 10px;
    min-height: 100px;
-   color: #90919A;
+   color: white;
    margin-bottom: 10px;
+}
+
+.modal-container > .main > .note-section:hover {
+   background: rgb(252, 252, 121, 0.1);
+}
+
+.modal-container > .main > .note-section:focus {
+   outline: none;
+   background: rgb(252, 252, 121, 0.1);
+}
+
+.modal-container > .main > .note-section[empty=true]::after {
+   content: 'Write a note...';
+   color: #90919A;
 }
 
 .modal-container > .main > .st-section {
@@ -476,22 +519,62 @@ ul {
 .st-section > .st-container {
    display: flex;
    align-items: center;
-   gap: 10px;
+   justify-content: space-between;
    color: #90919A;
    padding: 5px;
    border-radius: 10px;
 }
 
-.st-section > .st-container:hover {
-   background: rgb(255,255,255,0.08);
+.st-section > .st-container > :first-child > :first-child:hover {
+   /*background: rgb(255,255,255,0.08);*/
    cursor: pointer;
+}
+
+.st-section > .st-container:hover {
+   cursor: text;
+   color: white;
+}
+
+.st-container > :first-child {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+}
+
+.st-container > :first-child > :last-child[untitled=true] {
+   content: 'Untitled';
+   color: #90919A;
+}
+
+
+.st-container > :last-child {
+   display: none;
+   align-items: center;
+   gap: 10px;
+}
+
+.st-container > :last-child:hover {
+   cursor: pointer;
+}
+
+.st-container > :last-child > div {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: 25px;
+   height: 25px;
+   border-radius: 5px;
+}
+
+.st-container > :last-child > div:hover {
+   background: rgb(255,255,255,0.1);
 }
 
 .st-section > .st-add {
    display: flex;
    align-items: center;
    gap: 10px;
-   padding: 5px 0px;
+   padding: 5px;
    margin-top: 5px;
    border-radius: 10px;
 }
@@ -634,7 +717,6 @@ ul {
 .db-group > .body {
    display: flex;
    flex-direction: column;
-   gap: 10px;
    padding-top: 10px;
    background: #20212B;
    border-radius: 0 0 15px 15px;
@@ -642,7 +724,6 @@ ul {
 
 .db-group > .body > .task-container {
    background: transparent;
-   padding: 10px 15px;
 }
 
 .db-group > .body > .footer {
@@ -654,6 +735,7 @@ ul {
    border-top: 1px solid rgb(255,255,255,0.1);
    border-radius: 0 0 15px 15px;
    color: white;
+   margin-top: 10px;
 }
 
 .db-group > .body > .footer:hover {

@@ -37,9 +37,10 @@ const [lists, setLists] = useState([
 ```
 
 ## My Todo List 📝
-- [ ] Progress ring
-- [ ] Add/Update/Delete Subtask
-- [ ] Task note
+- [x] Complete task/subtask
+- [x] Progress ring
+- [x] Add/Update/Delete Subtask
+- [x] Task note
 - [ ] Change collection
 - [ ] Date selector
 - [ ] Dashbaord daily tab and all task tab

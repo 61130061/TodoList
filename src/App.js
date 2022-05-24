@@ -19,7 +19,7 @@ function App() {
                name: 'Finish the essay collaboration 1',
                done: false,
                date: '',
-               note: '',
+               note: 'Note me now',
                files: [],
                sub: [
                   {
